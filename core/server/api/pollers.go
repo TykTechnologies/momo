@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	tyk_api "github.com/TykTechnologies/momo/pkg/tyk-api"
 	"github.com/TykTechnologies/momo/pkg/models"
+	tyk_api "github.com/TykTechnologies/momo/pkg/tyk-api"
 
 	"github.com/TykTechnologies/momo/core/config"
 	"github.com/TykTechnologies/momo/core/drivers"

@@ -8,30 +8,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var logged = false
-
-func logOnce(log *logrus.Logger) {
-	if logged {
-		return
-	}
-	log.Debug("tracer hook initialising")
-	logged = true
-}
-
 // Certain apps should not have mongo tracing enabled
-var mgoExclusions = []string{
-	
-}
+var mgoExclusions = []string{}
 
-func isExcluded(app string) bool {
-	for _, exc := range mgoExclusions {
-		if app == exc {
-			return true
-		}
-	}
-
-	return false
-}
 
 func GetAndExcludeLoggerFromTrace(tag string) *logrus.Entry {
 	for _, v := range mgoExclusions {

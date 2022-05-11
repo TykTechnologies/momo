@@ -16,9 +16,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
+	"github.com/TykTechnologies/momo/pkg/interfaces"
 	"github.com/TykTechnologies/momo/pkg/logger"
 	"github.com/TykTechnologies/momo/pkg/models"
-	"github.com/TykTechnologies/momo/pkg/interfaces"
 	"github.com/TykTechnologies/momo/pkg/types"
 )
 

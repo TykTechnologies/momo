@@ -14,8 +14,6 @@ import (
 
 var log = logger.GetLogger("ctrl.storage")
 
-
-
 type MomoStore interface {
 	GetReference(id string) (*models.MomoMap, error)
 	UpdateReference(id string, mm *models.MomoMap) error

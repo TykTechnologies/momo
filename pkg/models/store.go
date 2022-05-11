@@ -9,4 +9,3 @@ type KeyDef struct {
 	PrivateKeyFile string
 	PublicKeyFile  string
 }
-

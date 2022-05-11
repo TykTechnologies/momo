@@ -9,5 +9,3 @@ const (
 	FEDERATED_STORE StorageDriver = "FederatedStore"
 	MOCK            StorageDriver = "mock"
 )
-
-

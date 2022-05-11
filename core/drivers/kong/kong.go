@@ -31,8 +31,8 @@ var (
 
 type Driver struct {
 	client *gokong.KongAdminClient
-	cfg   *KongConfSection
-	store coreStorage.MomoStore
+	cfg    *KongConfSection
+	store  coreStorage.MomoStore
 }
 
 func NewKongDriver() (types.GatewayDriver, error) {
