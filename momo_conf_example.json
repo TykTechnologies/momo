@@ -1,0 +1,32 @@
+{
+  "Momo": {
+    "StorageTag": "momo",
+    "StoreType": "Mongo",
+    "TykAPITag": "primary",
+    "Drivers": {
+      "AWS": {
+        "Conf": {
+          "KeyID": "AWSKEY",
+          "Secret": "AWSSECRET",
+          "Region": "us-east-1"
+
+        }
+      }
+    }
+  },
+  "MongoStore": {
+    "momo": {
+      "ConnStr":      "mongodb://0.0.0.0:27017",
+      "ControllerDb": "momo"
+    }
+  },
+  "TykAPI": {
+    "primary": {
+      "DashboardEndpoint": "http://localhost:3000",
+      "Secret": "DASHBOARD_KEY",
+      "AvailabilityTests": "1",
+      "AvailabilityWait": 3,
+      "Mock": false
+    }
+  }
+}

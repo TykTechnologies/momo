@@ -128,6 +128,7 @@ func HandleAddKey(data *models.KeyData) error {
 	var kid string
 	for _, t := range ses.Tags {
 		dName := strings.ToLower(t)
+		log.Info(dName)
 		d, err := drivers.GetDriver(dName)
 		if err == nil {
 			log.Info("detected add key event for driver: ", dName)

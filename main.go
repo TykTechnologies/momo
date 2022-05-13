@@ -20,7 +20,7 @@ func main() {
 }
 
 func init() {
-	viper.SetConfigName("ara")
+	viper.SetConfigName("momo")
 	viper.AddConfigPath("/etc/momo/")
 	viper.AddConfigPath("$HOME/.momo")
 	viper.AddConfigPath(".")

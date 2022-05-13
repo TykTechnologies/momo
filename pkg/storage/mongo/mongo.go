@@ -106,6 +106,10 @@ func (m *Store) GetTag() string {
 	return m.tag
 }
 
+func (m *Store) SetTag(s string) {
+	m.tag = s
+}
+
 func (m *Store) SetSecureConf(storageConf *models.SecureStore) error {
 	return nil
 }

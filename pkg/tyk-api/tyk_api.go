@@ -48,7 +48,7 @@ const (
 	APIDef      endpoint = "api/apis/"
 	KeyDetail   endpoint = "api/apis/default/keys/{key-id}"
 	Keys        endpoint = "api/keys"
-	PolicyList  endpoint = "api/portal/policies?p=-1 "
+	PolicyList  endpoint = "api/portal/policies?p=-1"
 	DashResetPW endpoint = "api/users/{user-id}/actions/reset"
 )
 
@@ -571,7 +571,7 @@ func (t *TykAPIHandler) GetKeyDetail(key string) (us *user.SessionState, err err
 	}
 
 	kdURL := strings.Replace(t.getURL(KeyDetail), "{key-id}", key, 1)
-	log.Debug("fetching ", kdURL)
+	log.Info("fetching ", kdURL)
 
 	var resp *http.Response
 	reqFail := 0
@@ -579,6 +579,7 @@ func (t *TykAPIHandler) GetKeyDetail(key string) (us *user.SessionState, err err
 		var d bytes.Buffer
 		req, err := http.NewRequest("GET", kdURL, &d)
 		if err != nil {
+			log.Error(err)
 			return nil, err
 		}
 

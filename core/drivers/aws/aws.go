@@ -3,7 +3,11 @@ package aws
 import (
 	"errors"
 	"fmt"
+	errPkg "github.com/TykTechnologies/momo/pkg/storage/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"reflect"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -56,9 +60,9 @@ func (d *Driver) Init() error {
 		return err
 	}
 
-	keyID := conf.Momo.Drivers.AWS.KeyID
-	secret := conf.Momo.Drivers.AWS.Secret
-	region := conf.Momo.Drivers.AWS.Region
+	keyID := conf.Momo.Drivers.AWS.Conf.KeyID
+	secret := conf.Momo.Drivers.AWS.Conf.Secret
+	region := conf.Momo.Drivers.AWS.Conf.Region
 
 	if keyID == "" || secret == "" || region == "" {
 		return errors.New("no AWS credentials found")
@@ -103,10 +107,34 @@ func (d *Driver) SetCredentials(awsKeyID, awsSecret, awsRegion string) {
 	d.awsSecret = awsSecret
 }
 
+func ToTimeHookFunc() mapstructure.DecodeHookFunc {
+	return func(
+		f reflect.Type,
+		t reflect.Type,
+		data interface{}) (interface{}, error) {
+		if t != reflect.TypeOf(time.Time{}) {
+			return data, nil
+		}
+
+		switch f.Kind() {
+		case reflect.String:
+			return time.Parse(time.RFC3339, data.(string))
+		case reflect.Float64:
+			return time.Unix(0, int64(data.(float64))*int64(time.Millisecond)), nil
+		case reflect.Int64:
+			// This is BSON specific conversion
+			return data.(primitive.DateTime).Time(), nil
+		default:
+			return data, nil
+		}
+		// Convert it by parsing
+	}
+}
+
 func (d *Driver) CreateOrUpdate(def *apidef.APIDefinition) error {
 	existingRef, err := d.store.GetReference(def.APIID)
 	if err != nil {
-		if err.Error() != "not found" {
+		if err != errPkg.ErrMomoRefNotFound {
 			return err
 		}
 	}
@@ -115,7 +143,20 @@ func (d *Driver) CreateOrUpdate(def *apidef.APIDefinition) error {
 		asPkg := &DriverPackage{}
 		dat, ok := existingRef.DriverData[d.Name()]
 		if ok {
-			err := mapstructure.Decode(dat, asPkg)
+
+			decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+				Metadata: nil,
+				DecodeHook: mapstructure.ComposeDecodeHookFunc(
+					ToTimeHookFunc()),
+				Result: asPkg,
+			})
+
+			if err != nil {
+				return err
+			}
+
+			//err := mapstructure.Decode
+			err = decoder.Decode(dat)
 			if err != nil {
 				return err
 			}
@@ -148,6 +189,7 @@ func (d *Driver) getSwaggerFromDefinition(def *apidef.APIDefinition) ([]byte, er
 
 	// TODO: handle more versions
 	js, err := asSwgr[0].MarshalJSON()
+	fmt.Println(string(js))
 	if err != nil {
 		return nil, err
 	}
